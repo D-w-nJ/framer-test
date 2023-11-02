@@ -4,19 +4,20 @@ import { Logger, ValidationPipe, VersioningType } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import helmet from 'helmet';
-import { ResponseInterceptor } from 'global/interceptors/response.interceptor';
+import { ServiceExceptionFilter } from './global/exception/service-exception.filter';
+import { ResponseInterceptor } from './global/interceptors/response.interceptor';
+import { ConfigService } from '@nestjs/config';
 
 const urlPrefix = 'api';
-const port = process.env.PORT || 5000;
 
 const bootstrap = async () => {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
   app.setGlobalPrefix(urlPrefix);
-  
   app.enableVersioning({ type: VersioningType.URI });
   
   app.useGlobalInterceptors(new ResponseInterceptor());
+  app.useGlobalFilters(new ServiceExceptionFilter());
   
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,
@@ -47,7 +48,10 @@ const bootstrap = async () => {
   /* cors */
   app.enableCors();
 
-  await app.listen(process.env.PORT || 5000);
+  const configService = app.get(ConfigService);
+  const port = Number(configService.get('PORT')) || 5000;
+
+  await app.listen(port);
 
   Logger.log(`🚀 Application is running on: http://localhost:${port}`);
 };

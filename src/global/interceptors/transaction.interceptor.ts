@@ -1,10 +1,15 @@
+import { DataSource } from '@app/database';
 import { CallHandler, ExecutionContext, HttpException, Injectable, InternalServerErrorException, NestInterceptor } from '@nestjs/common';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { Observable, catchError, tap } from 'rxjs';
-import { DataSource, QueryRunner } from 'typeorm';
+import { QueryRunner } from 'typeorm';
 
 @Injectable()
 export class TransactionInterceptor implements NestInterceptor {
-  constructor (private readonly dataSource: DataSource) {}
+  constructor (
+    @InjectDataSource()
+    private readonly dataSource: DataSource
+  ) {}
 
   async intercept(
     context: ExecutionContext,

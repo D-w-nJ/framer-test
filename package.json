@@ -7,28 +7,35 @@
   "license": "UNLICENSED",
   "scripts": {
     "build": "nest build",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:dev": "NODE_ENV=development nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod:test": "node dist/main",
     "start:prod": "NODE_ENV=production pm2 reload ecosystem.config.js --env production",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage",
-    "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:run": "env-cmd -f ./.env.development typeorm-ts-node-esm -d ./src/database/dataSource.ts migration:run",
-    "migration:revert": "env-cmd -f ./.env.development typeorm-ts-node-esm -d ./src/database/dataSource.ts migration:revert",
-    "migration:run:prod": "env-cmd -f ./.env.production typeorm-ts-node-esm -d ./src/database/dataSource.ts migration:run",
-    "migration:revert:prod": "env-cmd -f ./.env.production typeorm-ts-node-esm -d ./src/database/dataSource.ts migration:revert"
+    "typeorm:cli": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli -d libs/database/src/cli.dataSource.ts",
+    "migration:show": "NODE_ENV=development yarn run typeorm:cli migration:show",
+    "migration:run": "NODE_ENV=development yarn run typeorm:cli migration:run",
+    "migration:create": "cd ./libs/database/src/migrations && typeorm-ts-node-commonjs migration:create",
+    "migration:revert": "NODE_ENV=development yarn run typeorm:cli migration:revert",
+    "entity:create": "cd ./libs/database/src/entities && typeorm-ts-node-commonjs entity:create",
+    "migrate:create": "ts-node ./node_modules/typeorm/cli.js migration:create",
+    "migrate:run": "NODE_ENV=development ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:run -d libs/database/src/cli.dataSource.ts",
+    "migrate:revert": "NODE_ENV=development ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:revert -d libs/database/src/cli.dataSource.ts",
+    "migrate:show": "NODE_ENV=development ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js migration:show -d libs/database/src/cli.dataSource.ts"
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
     "@nestjs/core": "^10.0.0",
+    "@nestjs/jwt": "^10.1.1",
+    "@nestjs/passport": "^10.0.2",
     "@nestjs/platform-express": "^10.0.0",
+    "dotenv": "^16.3.1",
     "helmet": "^7.0.0",
+    "passport": "^0.6.0",
+    "passport-jwt": "^4.0.1",
+    "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "sqlite3": "^5.1.6"
@@ -69,7 +76,7 @@
       "json",
       "ts"
     ],
-    "rootDir": "src",
+    "rootDir": ".",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
@@ -77,7 +84,15 @@
     "collectCoverageFrom": [
       "**/*.(t|j)s"
     ],
-    "coverageDirectory": "../coverage",
-    "testEnvironment": "node"
+    "coverageDirectory": "./coverage",
+    "testEnvironment": "node",
+    "roots": [
+      "<rootDir>/src/",
+      "<rootDir>/libs/"
+    ],
+    "moduleNameMapper": {
+      "^@app/database(|/.*)$": "<rootDir>/libs/database/src/$1",
+      "^@app/jwt(|/.*)$": "<rootDir>/libs/jwt/src/$1"
+    }
   }
 }

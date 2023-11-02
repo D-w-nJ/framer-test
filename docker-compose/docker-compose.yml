@@ -1,0 +1,38 @@
+version: '3'
+
+networks:
+  default-network:
+    driver: bridge
+
+services:
+  # Database
+  db:
+    container_name: db
+    image: mysql:8.0
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    env_file: ./mysql/.env
+    volumes:
+      - ./mysql/conf.d:/etc/mysql/conf.d
+      - ./mysql/data:/var/lib/mysqld
+#    networks:
+#      - default-network
+
+  # Nest App
+  api:
+    container_name: nest-template-api
+    build:
+      context: ..
+    env_file:
+      - ../.env.production
+    ports:
+      - 5000:5000
+    environment:
+      - NODE_ENV=production
+    # volumes:
+    #   - ./src:/app/src:ro
+#    networks:
+#      - default-network
+    depends_on:
+      - db

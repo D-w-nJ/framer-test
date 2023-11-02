@@ -1,0 +1,1 @@
+docker-compose -p nest-template up -d

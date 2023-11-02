@@ -1,6 +1,7 @@
 import { CallHandler, ExecutionContext, HttpStatus, NestInterceptor } from '@nestjs/common';
 import { Injectable } from '@nestjs/common/decorators';
 import { map } from 'rxjs';
+import { ExceptionCode } from '../exception/exception-code';
 
 @Injectable()
 export class ResponseInterceptor implements NestInterceptor {
@@ -13,9 +14,7 @@ export class ResponseInterceptor implements NestInterceptor {
       map(data => {
         res.status(HttpStatus.OK);
 
-        if (!data) return { error: ErrorCode.NO_RESPONSE, message: '응답 데이터 없음' };
-        else if (data.error) return data;
-        else return { error: ErrorCode.SUCCESS, payload: data };
+        return { error: ExceptionCode.SUCCESS, payload: data };
       })
     );
   }

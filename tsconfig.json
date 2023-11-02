@@ -16,12 +16,27 @@
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
-    "types": ["node", "express", "multer"],
-    "baseUrl": "src",
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "types": [
+      "node",
+      "express",
+      "multer"
+    ],
+    "baseUrl": "./",
     "paths": {
-      "configs/*": ["configs/*"],
-      "database/*": ["database/*"],
-      "global/*": ["global/*"]
+      "@app/database": [
+        "libs/database/src"
+      ],
+      "@app/database/*": [
+        "libs/database/src/*"
+      ],
+      "@app/jwt": [
+        "libs/jwt/src"
+      ],
+      "@app/jwt/*": [
+        "libs/jwt/src/*"
+      ]
     }
   }
 }

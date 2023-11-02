@@ -1,21 +1,20 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { User } from 'database/entities/user.entity';
-import { DataSource, EntityManager, Repository } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
+import { EntityManager } from 'typeorm';
 import { CreateUserRequestDto } from './dto/createUser.request.dto';
+import { User } from '@app/database/entities/user.entity';
+import { DataSource } from '@app/database';
 
 @Injectable()
 export class UserService {
   constructor(
-    private dataSource: DataSource,
-
-    @InjectRepository(User)
-    private readonly userRepo: Repository<User>,
+    @InjectDataSource()
+    private dataSource: DataSource
   ) {}
 
   async getUserList () {
-    return this.userRepo.find({
-      select: ['id', 'email', 'password', 'name', 'phone']
+    return this.dataSource.manager.find(User, {
+      select: ['id', 'email', 'password', 'name']
     });
   }
 
