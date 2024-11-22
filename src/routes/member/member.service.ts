@@ -31,7 +31,7 @@ export class MemberService {
       throw new UnauthorizedException();
     }
 
-    return this.members.get(id);
+    return this.contents.get(id);
   }
 
   // 모든 멤버 정보 반환
