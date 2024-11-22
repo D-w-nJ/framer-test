@@ -1,21 +1,21 @@
 import { Module } from '@nestjs/common';
-import { DatabaseModule } from '@app/database';
 import { ConfigurationModule } from './configs/config.module';
-import { UserModule } from './routes/user/user.module';
-import { RouterModule } from '@nestjs/core';
-import { JwtModule } from '@nestjs/jwt';
+import { MemberModule } from './routes/member/member.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+import { homedir } from 'os';
 
 @Module({
   imports: [
     ConfigurationModule,
-    JwtModule,
-    DatabaseModule,
+    ServeStaticModule.forRoot({
+      rootPath: join(homedir(), 'framer'),
+      serveRoot: '/file',
+    }),
 
     /* routes */
-    UserModule,
-    RouterModule.register([
-      { path: 'user', module: UserModule }
-    ])
-  ]
+    MemberModule,
+  ],
 })
-export class AppModule {}
+export class AppModule {
+}

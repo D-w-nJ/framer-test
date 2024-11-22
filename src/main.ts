@@ -29,7 +29,7 @@ const bootstrap = async () => {
   const document = SwaggerModule.createDocument(
     app,
     new DocumentBuilder()
-      .setTitle('Nest.js API')
+      .setTitle('Framer test API')
       .setDescription('API Documentation')
       .setVersion('1.0.0')
       .addBearerAuth({
@@ -40,6 +40,34 @@ const bootstrap = async () => {
       }, 'accessToken')
       .build()
   );
+
+  const paths = document.paths as any;
+  paths['/file/{filename}'] = {
+    get: {
+      summary: '프로필 이미지 조회 (정적 파일 제공)',
+      parameters: [
+        {
+          name: 'filename',
+          in: 'path',
+          required: true,
+          description: '조회할 파일의 이름 (예: file-uuid.jpg)',
+          example: 'file-98841a4a-b393-4405-867c-7fd8c6834015.jpg',
+          schema: {
+            type: 'string'
+          }
+        }
+      ],
+      responses: {
+        200: {
+          description:
+            '프로필 이미지 파일을 반환합니다. 파일 예시: /profile-{uuid}.jpg',
+          content: {
+          }
+        }
+      }
+    }
+  };
+
   SwaggerModule.setup('api-docs', app, document, { swaggerOptions: { persistAuthorization: true } });
 
   /* helmet */
@@ -49,7 +77,7 @@ const bootstrap = async () => {
   app.enableCors();
 
   const configService = app.get(ConfigService);
-  const port = Number(configService.get('PORT')) || 5000;
+  const port = Number(configService.get('PORT')) || 5001;
 
   await app.listen(port);
 
