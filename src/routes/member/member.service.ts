@@ -10,7 +10,7 @@ export class MemberService {
     this.members.set(id, { id, password });
 
     return {
-      id: id,
+      id: id
     };
   }
 
@@ -22,7 +22,7 @@ export class MemberService {
     this.contents.set(id, body);
 
     return {
-      contents: this.contents.get(id),
+      contents: this.contents.get(id)
     };
   }
 
