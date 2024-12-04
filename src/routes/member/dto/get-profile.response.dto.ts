@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 export class GetProfileImageResponseDto {
   @ApiProperty({
     description: 'file 이름',
-    example: ' file-98841a4a-b393-4405-867c-7fd8c6834015.jpg',
+    example: 'file-98841a4a-b393-4405-867c-7fd8c6834015.jpg',
   })
   filename: string;
 

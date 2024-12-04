@@ -2,7 +2,7 @@ module.exports = {
   apps: [{
     name: 'nestjs-template',
     exec_mode: 'cluster',
-    instances: 4,
+    instances: 1,
     // listen_timeout: 50000, // 앱 실행신호까지 기다릴 최대시간 ms단위 50초
     // kill_timeout: 5000, //새로운 프로세스 실행이 완료된 후 예전 프로세스를 교체하기까지 기다릴 시간  5초
     // wait_ready: true,
